@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './styles.css';
-
+import { useHistory } from 'react-router-dom';
 var adetails = localStorage.getItem('details')
 if(adetails)
 {
@@ -12,7 +12,7 @@ else
 }
 const Form = () =>
 {
-  
+  const history = useHistory();
   const [email,setEmail] = useState("");
   const [name,setName] = useState("");
   const [price,setPrice] = useState("");
@@ -24,16 +24,23 @@ const Form = () =>
     {
       alert("Please fill all details");
     }
-    e.preventDefault();
-    console.log(email,name,price,check);
-    const details = {
-      email : email,
-      name : name,
-      price : Number(price),
-      check : check
+    else
+    {
+      console.log(email,name,price,check);
+      const keys = email.split('@');
+      const details = {
+        email : email,
+        name : name,
+        price : Number(price),
+        check : check,
+        key : keys[0]
+      }
+      adetails.push(details)
+      localStorage.setItem('details',JSON.stringify(adetails));
+      history.push('/')
     }
-    adetails.push(details)
-    localStorage.setItem('details',JSON.stringify(adetails));
+    e.preventDefault();
+    // history.push('/add')
 
   }
   return (
@@ -55,7 +62,7 @@ const Form = () =>
               <span style={{fontSize:"20px",color:"white"}}>Active status:</span><input type="checkbox" onChange={(e) => setCheck(e.target.checked)} ></input>
             </div>
             <div className='form-group'>
-              <button className='form-control btn btn-primary'>Add</button>
+              <button className='form-control btn btn-primary'><span style={{color:"white"}}>Add</span></button>
             </div>
           </form>
         </div>
